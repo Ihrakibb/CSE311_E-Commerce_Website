@@ -84,6 +84,27 @@ if (isset($_POST['add_to_cart'])) {
         $stmt->execute();
     
     }
+    $found = false;
+    foreach ($_SESSION['cart'] as &$item) {
+        if ($item['id'] == $product_id) {
+            $item['quantity'] += $quantity;
+            $item['total'] = $item['price'] * $item['quantity'];
+            $found = true;
+            break;
+        }
+    }
+
+    if (!$found) {
+        $item = [
+            "id" => $product_id,
+            "name" => $product_name,
+            "price" => $product_price,
+            "quantity" => $quantity,
+            "total" => $product_price * $quantity,
+            "image" => $product_image
+        ];
+        $_SESSION['cart'][] = $item; // Add item to session cart
+    }
 
     // Display a success message
     echo "<p style='color: green;'>Product added to cart successfully!</p>";
@@ -124,6 +145,11 @@ if (isset($_POST['add_to_cart'])) {
         }
         ?>
     </div>
+
+    <a href="cart.php" class="btn-cart">Go to Cart</a>
+
+</body>
+</html>
 
     <a href="cart.php" class="btn-cart">Go to Cart</a>
 
